@@ -1,0 +1,46 @@
+name: Daily News Digest Bot
+
+on:
+  schedule:
+    # Giờ Việt Nam (UTC+7):
+    # 06:00 sáng VN = 23:00 UTC hôm trước
+    # 14:00 chiều VN = 07:00 UTC
+    # 22:00 tối VN   = 15:00 UTC
+    - cron: '0 23 * * *'
+    - cron: '0 7 * * *'
+    - cron: '0 15 * * *'
+  workflow_dispatch: # Nút chạy thử thủ công trên web GitHub
+
+permissions:
+  contents: write # Cấp quyền để bot tự lưu file seen_links.json
+
+jobs:
+  run-news-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch and summarize news
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python bot.py
+
+      - name: Save seen links history
+        run: |
+          if [ -f seen_links.json ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add seen_links.json
+            git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update seen news links" && git push)
+          fi
