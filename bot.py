@@ -4,12 +4,20 @@ import re
 import feedparser
 import requests
 from google import genai
+from google.genai import errors
 
 TELEGRAM_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
 HISTORY_FILE = "seen_links.json"
+
+GEMINI_MODELS = [
+    "gemini-3.6-flash",
+    "gemini-3.8-flash",
+    "gemini-3.7-flash",
+    "gemini-3.5-flash",
+]
 
 RSS_FEEDS = {
     "VnExpress - Thời sự": "https://vnexpress.net/rss/thoi-su.rss",
@@ -92,10 +100,25 @@ def summarize_with_ai(articles):
     - Dịch tin tiếng Anh sang tiếng Việt tự nhiên, chuẩn thuật ngữ công nghệ/chính trị.
     """
 
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=prompt,
-    )
+    last_error = None
+    response = None
+    for model_name in GEMINI_MODELS:
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+            )
+            break
+        except errors.APIError as e:
+            if getattr(e, "code", None) == 503:
+                print(f"Model {model_name} gặp lỗi 503, đang chuyển sang model dự phòng...")
+                last_error = e
+                continue
+            raise
+
+    if response is None:
+        raise last_error
+
     text = (response.text or "").strip()
     # Loại bỏ cặp code fence nếu model lỡ bọc kết quả trong ```html ... ```
     text = re.sub(r"^```(?:html)?\s*\n?", "", text)
