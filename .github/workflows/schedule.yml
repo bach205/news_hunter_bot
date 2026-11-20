@@ -2,13 +2,13 @@ name: Daily News Digest Bot
 
 on:
   schedule:
-    # Giờ Việt Nam (UTC+7):
-    # 06:00 sáng VN = 23:00 UTC hôm trước
-    # 14:00 chiều VN = 07:00 UTC
-    # 22:00 tối VN   = 15:00 UTC
-    - cron: '0 23 * * *'
-    - cron: '0 7 * * *'
-    - cron: '0 15 * * *'
+    # Giờ Việt Nam (UTC+7) - dùng phút lẻ để tránh nghẽn hàng đợi :00 của GitHub:
+    # 06:17 sáng VN = 23:17 UTC hôm trước
+    # 14:23 chiều VN = 07:23 UTC
+    # 22:11 tối VN   = 15:11 UTC
+    - cron: '17 23 * * *'
+    - cron: '23 7 * * *'
+    - cron: '11 15 * * *'
   workflow_dispatch: # Nút chạy thử thủ công trên web GitHub
 
 permissions:
