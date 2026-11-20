@@ -2,3 +2,5 @@ feedparser
 requests
 google-genai
 openrouter
+python-dotenv
+croniter

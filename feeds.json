@@ -1,0 +1,109 @@
+[
+  {
+    "name": "Reuters - Tin Hot Trong Ngày",
+    "url": "https://news.google.com/rss/search?q=site:reuters.com+when:12h&hl=en-US&gl=US&ceid=US:en",
+    "platform": "rss",
+    "category": "news",
+    "limit": 5,
+    "enabled": true
+  },
+  {
+    "name": "Reuters - Chính trị & Thế giới",
+    "url": "https://news.google.com/rss/search?q=site:reuters.com/world+when:1d&hl=en-US&gl=US&ceid=US:en",
+    "platform": "rss",
+    "category": "news",
+    "limit": 5,
+    "enabled": true
+  },
+  {
+    "name": "Reuters - Công nghệ",
+    "url": "https://news.google.com/rss/search?q=site:reuters.com/technology+when:1d&hl=en-US&gl=US&ceid=US:en",
+    "platform": "rss",
+    "category": "news",
+    "limit": 5,
+    "enabled": true
+  },
+  {
+    "name": "VnExpress - Thời sự",
+    "url": "https://vnexpress.net/rss/thoi-su.rss",
+    "platform": "rss",
+    "category": "news",
+    "limit": 5,
+    "enabled": true
+  },
+  {
+    "name": "VnExpress - Thế giới",
+    "url": "https://vnexpress.net/rss/the-gioi.rss",
+    "platform": "rss",
+    "category": "news",
+    "limit": 5,
+    "enabled": true
+  },
+  {
+    "name": "VnExpress - Công nghệ",
+    "url": "https://vnexpress.net/rss/so-hoa.rss",
+    "platform": "rss",
+    "category": "news",
+    "limit": 5,
+    "enabled": true
+  },
+  {
+    "name": "VietNamNet - Tin nóng",
+    "url": "https://vietnamnet.vn/home.rss",
+    "platform": "rss",
+    "category": "news",
+    "limit": 5,
+    "enabled": true
+  },
+  {
+    "name": "Hacker News (Hot Tech)",
+    "url": "https://hnrss.org/frontpage?points=100",
+    "platform": "rss",
+    "category": "news",
+    "limit": 4,
+    "enabled": true
+  },
+  {
+    "name": "X - Reuters",
+    "url": "{RSSHUB_BASE_URL}/twitter/user/Reuters",
+    "platform": "x",
+    "category": "social",
+    "limit": 5,
+    "skip_retweets": true,
+    "enabled": false
+  },
+  {
+    "name": "X - OpenAI",
+    "url": "{RSSHUB_BASE_URL}/twitter/user/OpenAI",
+    "platform": "x",
+    "category": "social",
+    "limit": 5,
+    "skip_retweets": true,
+    "enabled": false
+  },
+  {
+    "name": "X - Danh sách theo dõi (List)",
+    "url": "{RSSHUB_BASE_URL}/twitter/list/REPLACE_WITH_LIST_ID",
+    "platform": "x",
+    "category": "social",
+    "limit": 8,
+    "skip_retweets": true,
+    "enabled": false
+  },
+  {
+    "name": "Threads - Mark Zuckerberg",
+    "url": "{RSSHUB_BASE_URL}/threads/zuck",
+    "platform": "threads",
+    "category": "social",
+    "limit": 5,
+    "enabled": false
+  },
+  {
+    "name": "Threads - TechCrunch",
+    "url": "{RSSHUB_BASE_URL}/threads/techcrunch",
+    "platform": "threads",
+    "category": "social",
+    "limit": 5,
+    "enabled": false
+  }
+]
