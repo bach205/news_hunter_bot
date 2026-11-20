@@ -64,31 +64,13 @@
     "enabled": true
   },
   {
-    "name": "X - Reuters",
-    "url": "{RSSHUB_BASE_URL}/twitter/user/Reuters",
-    "platform": "x",
-    "category": "social",
-    "limit": 5,
-    "skip_retweets": true,
-    "enabled": false
-  },
-  {
-    "name": "X - OpenAI",
-    "url": "{RSSHUB_BASE_URL}/twitter/user/OpenAI",
-    "platform": "x",
-    "category": "social",
-    "limit": 5,
-    "skip_retweets": true,
-    "enabled": false
-  },
-  {
     "name": "X - Danh sách theo dõi (List)",
-    "url": "{RSSHUB_BASE_URL}/twitter/list/REPLACE_WITH_LIST_ID",
+    "url": "{RSSHUB_BASE_URL}/twitter/list/2123790438801027473",
     "platform": "x",
     "category": "social",
-    "limit": 8,
+    "limit": 10,
     "skip_retweets": true,
-    "enabled": false
+    "enabled": true
   },
   {
     "name": "Threads - Mark Zuckerberg",

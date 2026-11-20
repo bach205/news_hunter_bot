@@ -88,10 +88,11 @@ docker compose ps
 curl -I http://127.0.0.1:1200/healthz
 curl -s http://127.0.0.1:1200/threads/zuck | head -n 20
 
-# Ép bot chạy thử ngay 1 phiên mà không cần đợi đến giờ cron
-docker compose exec news-bot python bot.py
+# Ép bot chạy thử riêng từng luồng ngay lập tức
+docker compose exec news-bot python bot.py --mode news
+docker compose exec news-bot python bot.py --mode social
 
-# Xem log scheduler & các phiên chạy
+# Xem log lịch chạy cả 2 luồng (báo chí 06:17/14:17/22:17 & X/Threads 07:30 sáng)
 docker compose logs -f news-bot
 ```
 

@@ -20,6 +20,9 @@ OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 RSSHUB_BASE_URL = os.environ.get("RSSHUB_BASE_URL", "http://127.0.0.1:1200").rstrip("/")
 FEEDS_FILE = Path(os.environ.get("FEEDS_FILE", str(BASE_DIR / "feeds.json")))
 HISTORY_FILE = Path(os.environ.get("HISTORY_FILE", str(BASE_DIR / "seen_links.json")))
+COOLDOWN_FILE = Path(
+    os.environ.get("COOLDOWN_FILE", str(HISTORY_FILE.parent / "cooldown.json"))
+)
 
 MAX_SEEN_LINKS = int(os.environ.get("MAX_SEEN_LINKS", "1000"))
 MAX_ARTICLES_PER_FEED = int(os.environ.get("MAX_ARTICLES_PER_FEED", "5"))
@@ -28,6 +31,9 @@ TELEGRAM_MESSAGE_LIMIT = 4000
 
 FETCH_TIMEOUT = int(os.environ.get("FETCH_TIMEOUT", "25"))
 FETCH_RETRIES = int(os.environ.get("FETCH_RETRIES", "2"))
+SOCIAL_REQUEST_DELAY_MIN = float(os.environ.get("SOCIAL_REQUEST_DELAY_MIN", "8"))
+SOCIAL_REQUEST_DELAY_MAX = float(os.environ.get("SOCIAL_REQUEST_DELAY_MAX", "18"))
+SOCIAL_COOLDOWN_HOURS = float(os.environ.get("SOCIAL_COOLDOWN_HOURS", "12"))
 SEND_ERROR_ALERTS = os.environ.get("SEND_ERROR_ALERTS", "true").strip().lower() in {
     "1",
     "true",
@@ -35,7 +41,13 @@ SEND_ERROR_ALERTS = os.environ.get("SEND_ERROR_ALERTS", "true").strip().lower() 
     "on",
 }
 
+# Lịch chạy tách riêng 2 luồng (theo múi giờ TZ, mặc định Asia/Ho_Chi_Minh)
 CRON_SCHEDULE = os.environ.get("CRON_SCHEDULE", "17 6,14,22 * * *")
+CRON_JITTER_MAX_SECONDS = int(os.environ.get("CRON_JITTER_MAX_SECONDS", "0"))
+SOCIAL_CRON_SCHEDULE = os.environ.get("SOCIAL_CRON_SCHEDULE", "30 7 * * *")
+SOCIAL_CRON_JITTER_MAX_SECONDS = int(
+    os.environ.get("SOCIAL_CRON_JITTER_MAX_SECONDS", "300")
+)
 RUN_ON_STARTUP = os.environ.get("RUN_ON_STARTUP", "false").strip().lower() in {
     "1",
     "true",
@@ -120,8 +132,8 @@ DEFAULT_FEEDS = [
 ]
 
 
-def load_feeds(path=FEEDS_FILE):
-    """Đọc danh sách RSS feeds từ feeds.json (fallback về DEFAULT_FEEDS nếu chưa có)."""
+def load_feeds(path=FEEDS_FILE, categories=None):
+    """Đọc danh sách RSS feeds từ feeds.json (có thể lọc theo category: 'news' / 'social')."""
     feed_path = Path(path)
     if feed_path.exists():
         with feed_path.open("r", encoding="utf-8") as f:
@@ -129,9 +141,16 @@ def load_feeds(path=FEEDS_FILE):
     else:
         raw_feeds = DEFAULT_FEEDS
 
+    allowed_categories = (
+        {str(c).lower() for c in categories} if categories is not None else None
+    )
+
     resolved = []
     for item in raw_feeds:
         if not item.get("enabled", True):
+            continue
+        category = item.get("category", "news").lower()
+        if allowed_categories is not None and category not in allowed_categories:
             continue
         url = str(item["url"]).replace("{RSSHUB_BASE_URL}", RSSHUB_BASE_URL)
         uses_rsshub = "{RSSHUB_BASE_URL}" in str(item["url"]) or url.startswith(
@@ -142,7 +161,7 @@ def load_feeds(path=FEEDS_FILE):
                 "name": item["name"],
                 "url": url,
                 "platform": item.get("platform", "rss").lower(),
-                "category": item.get("category", "news").lower(),
+                "category": category,
                 "limit": int(item.get("limit", MAX_ARTICLES_PER_FEED)),
                 "skip_retweets": bool(item.get("skip_retweets", False)),
                 "uses_rsshub": uses_rsshub,
