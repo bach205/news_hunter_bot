@@ -13,12 +13,18 @@ def fetch_latest_news():
     seen_set = set(seen_list)
     new_articles = []
 
-    for source, url in RSS_FEEDS.items():
+    for source, feed_config in RSS_FEEDS.items():
+        url = feed_config["url"] if isinstance(feed_config, dict) else feed_config
+        limit = (
+            feed_config.get("limit", MAX_ARTICLES_PER_FEED)
+            if isinstance(feed_config, dict)
+            else MAX_ARTICLES_PER_FEED
+        )
         try:
             feed = feedparser.parse(url)
             count = 0
             for entry in feed.entries:
-                if count >= MAX_ARTICLES_PER_FEED:
+                if count >= limit:
                     break
                 link = entry.get("link", "")
                 title = entry.get("title", "")

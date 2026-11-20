@@ -21,14 +21,41 @@ GEMINI_FALLBACK_CODES = {404, 429, 500, 502, 503, 504}
 OPENROUTER_FREE_MODEL = "openrouter/free"
 
 RSS_FEEDS = {
-    "VnExpress - Thời sự": "https://vnexpress.net/rss/thoi-su.rss",
-    "VnExpress - Thế giới": "https://vnexpress.net/rss/the-gioi.rss",
-    "VnExpress - Công nghệ": "https://vnexpress.net/rss/so-hoa.rss",
-    "VietNamNet - Thời sự": "https://vietnamnet.vn/rss/thoi-su.rss",
-    "VietNamNet - Tin nóng": "https://vietnamnet.vn/home.rss",
-    "Hacker News (Hot Tech)": "https://hnrss.org/frontpage?points=100",
-    "Reuters (World & Politics)": "https://news.google.com/rss/search?q=site:reuters.com+when:1d&hl=en-US&gl=US&ceid=US:en",
+    # --- NHÓM REUTERS (Ưu tiên lấy nhiều) ---
+    "Reuters - Tin Hot Trong Ngày": {
+        "url": "https://news.google.com/rss/search?q=site:reuters.com+when:12h&hl=en-US&gl=US&ceid=US:en",
+        "limit": 5,
+    },
+    "Reuters - Chính trị & Thế giới": {
+        "url": "https://news.google.com/rss/search?q=site:reuters.com/world+when:1d&hl=en-US&gl=US&ceid=US:en",
+        "limit": 5,
+    },
+    "Reuters - Công nghệ": {
+        "url": "https://news.google.com/rss/search?q=site:reuters.com/technology+when:1d&hl=en-US&gl=US&ceid=US:en",
+        "limit": 5,
+    },
+    # --- CÁC NGUỒN BỔ SUNG (Giảm nhẹ để không lấn át Reuters) ---
+    "VnExpress - Thời sự": {
+        "url": "https://vnexpress.net/rss/thoi-su.rss",
+        "limit": 5,
+    },
+    "VnExpress - Thế giới": {
+        "url": "https://vnexpress.net/rss/the-gioi.rss",
+        "limit": 5,
+    },
+    "VnExpress - Công nghệ": {
+        "url": "https://vnexpress.net/rss/so-hoa.rss",
+        "limit": 5,
+    },
+    "VietNamNet - Tin nóng": {
+        "url": "https://vietnamnet.vn/home.rss",
+        "limit": 5,
+    },
+    "Hacker News (Hot Tech)": {
+        "url": "https://hnrss.org/frontpage?points=100",
+        "limit": 4,
+    },
     # Thêm tài khoản X hoặc Threads qua RSSHub tại đây (ví dụ):
-    # "X - Reuters": "https://rsshub.app/twitter/user/reuters",
-    # "Threads - Zuckerberg": "https://rsshub.app/threads/zuck",
+    # "X - Reuters": {"url": "https://rsshub.app/twitter/user/reuters", "limit": 5},
+    # "Threads - Zuckerberg": {"url": "https://rsshub.app/threads/zuck", "limit": 5},
 }
